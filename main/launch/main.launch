@@ -1,0 +1,99 @@
+<?xml version="0.0" encoding="UTF-8"?>
+
+<launch>
+
+<!-- world.launch -->
+  <!-- Robot pose -->
+  <arg name="x" default="1"/>
+  <arg name="y" default="1"/>
+  <arg name="z" default="0"/>
+  <arg name="roll" default="0"/>
+  <arg name="pitch" default="0"/>
+  <arg name="yaw" default="0"/>
+
+  <!-- Launch other relevant files-->
+  <include file="$(find my_robot)/launch/robot_description.launch"/>
+	
+  <!-- World File -->
+  <arg name="world_file" default="$(find my_robot)/worlds/MapMyWorld.world"/>
+
+  <!-- Launch Gazebo World -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="debug" value="false"/>
+    <arg name="gui" value="true" />
+    <arg name="world_name" value="$(arg world_file)"/>
+
+  </include>
+
+  <!-- Find my robot Description-->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find my_robot)/urdf/my_robot.xacro'"/>
+
+  <!-- Spawn My Robot -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
+        args="-urdf -param robot_description -model my_robot 
+              -x $(arg x) -y $(arg y) -z $(arg z)
+              -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
+
+  <!--launch rviz-->
+  <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find my_robot)/rviz/whereami.rviz" />
+
+<!-- AMCL -->
+  	<!-- Map Server -->	
+<!--	<arg name="map_file" default="$(find my_robot)/maps/map.yaml"/>
+	<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+	<arg name="xmin" default="-15" />
+	<arg name="xmax" default="15" />	
+	<arg name="ymin" default="-15" />
+	<arg name="ymax" default="15" /> -->
+
+<!--	<arg name="scan_height" default="5" />
+	<arg name="resolution" default="0.01" /> -->
+
+<!--	 AMCL Node 
+  	<node name="amcl" pkg="amcl" type="amcl" output="screen">
+	 <remap from="scan" to="my_robot/laser/scan"/>
+	  <param name="odom_frame_id" value="odom"/>
+  	  <param name="odom_model_type" value="diff-corrected"/>
+  	  <param name="base_frame_id" value="robot_footprint"/>
+  	  <param name="global_frame_id" value="map"/>
+	  
+  Changing the parameters 
+	  <param name="min_particles" value="50" />
+	  <param name="max_particles" value="200" />
+	  <param name="initial_pose_x" value="12.0" />
+	  <param name="initial_pose_y" value="10.0" />
+	  <param name="initial_pose_a" value="-1.5708" />
+	  <param name="update_min_d" value="0.1" />
+	  <param name="update_min_a" value="0.25" />
+	  <param name="gui_publish_rate" value="60.0" />
+	  <param name="resample_interval" value="5" />
+	 
+	  <param name="laser_min_range" value="0.1" />
+	  <param name="laser_max_range" value="15" />
+	  <param name="laser_max_beams" value="20" />
+	  <param name="laser_z_hit" value="0.1" />
+	  <param name="laser_z_rand" value="0.1" /> 
+
+	  <param name="odom_model_type" value="diff-corrected" />
+	  <param name="odom_alpha1" value="0.04"/>
+	  <param name="odom_alpha2" value="0.04"/>
+	  <param name="odom_alpha3" value="0.04"/>
+	  <param name="odom_alpha4" value="0.04"/> 
+
+	</node> 
+
+
+	 Move Base 
+  	<node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
+	 <remap from="scan" to="my_robot/laser/scan"/>  	
+	<param name="base_global_planner" value="navfn/NavfnROS" />
+	<param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+	<rosparam file="$(find my_robot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+	<rosparam file="$(find my_robot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+	<rosparam file="$(find my_robot)/config/local_costmap_params.yaml" command="load" />
+  	<rosparam file="$(find my_robot)/config/global_costmap_params.yaml" command="load" />
+  	<rosparam file="$(find my_robot)/config/base_local_planner_params.yaml" command="load" />
+	</node> -->
+
+</launch>
