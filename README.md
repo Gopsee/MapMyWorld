@@ -20,6 +20,7 @@ We have two ROS packages in this project, one is custom build packge (my_robot) 
 ```
     cd catkin/src
     git clone https://github.com/Gopsee/MapMyWorld.git
+    git clone https://github.com/introlab/rtabmap_ros.git
     cd ..
     catkin_make
  ```
